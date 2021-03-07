@@ -3,6 +3,8 @@
 //   32 color paletts programing question:  How to?
 //   16 color paletts work 
 
+
+
 //  initialize
 #include <Wire.h>
 #include <IoAbstraction.h>
@@ -28,17 +30,35 @@ CRGB leds[NUM_LEDS];
 
 //  Start define Pallets
 CRGBPalette16 currentPalette;
+CRGBPalette32 currentPalette32;    //Added to intalize CRGBPalette32
 TBlendType    currentBlending;
 
-
+//  CRGBPalette16 example
 extern CRGBPalette16 myRedBluePalette;
 extern const TProgmemPalette16 myRedBluePalette_p PROGMEM;
 
-extern CRGBPalette16 RWBPalette;
-extern const TProgmemPalette16 RWB_p PROGMEM;
-//  note function CRGBPalette32 not recognized
 extern CRGBPalette32 Ocean;
 extern const TProgmemPalette32 Ocean_p PROGMEM;
+
+//  Fill both Paletts
+void FillLEDsFromPaletteColors( uint8_t colorIndex)
+{
+   uint8_t brightness = 255;
+//  Loads color palette(?)    
+    for( int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
+        colorIndex += 3;
+    }
+}
+void FillLEDsFromPaletteColors32( uint8_t colorIndex)
+{
+   uint8_t brightness = 255;
+//  Loads color palette(?)    
+    for( int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = ColorFromPalette( currentPalette32, colorIndex, brightness, currentBlending);
+        colorIndex += 1;     // Note changed to 1 to lenghthen color pixel 
+    }
+}
 
 void LoopFLed()
 //Works
@@ -62,15 +82,16 @@ void LoopFLed()
 //    FastLED.delay(1000 / UPDATES_PER_SECOND);
    } 
 
-  // Does not work?
+  // Working 32 colorpalette
    if(  KeyFG == 24)  //L
-   { currentPalette = Ocean_p; currentBlending = NOBLEND;
-    static uint32_t startIndex = 0;
+   { currentPalette32 = Ocean_p; currentBlending = NOBLEND;
+    static uint16_t startIndex = 0;
     startIndex = startIndex + 1; /* motion speed */
-    FillLEDsFromPaletteColors( startIndex);     
-    FastLED.show();
-   FastLED.delay(1000 / UPDATES_PER_SECOND);
-   }        
+    FillLEDsFromPaletteColors32( startIndex);     
+      FastLED.delay(10000 / UPDATES_PER_SECOND);
+        FastLED.show();
+ 
+   }      
 //   End LoopFLed  !!
 
 //custom 16 color palette
@@ -97,13 +118,33 @@ const TProgmemPalette16 myRedBluePalette_p PROGMEM =
     CRGB::Blue,
  };
 
-//custom 16 color palette
+//custom 32 color palette
 const TProgmemRGBPalette32 Ocean_p PROGMEM =
 {
     CRGB::MidnightBlue,
     CRGB::DarkBlue,
-    CRGB::Green,
+    CRGB::Teal,
     CRGB::Navy,
+
+    CRGB::DarkBlue,
+    CRGB::Blue,
+    CRGB::SeaGreen,
+    CRGB::DarkGreen,
+
+    CRGB::CadetBlue,
+    CRGB::Blue,
+    CRGB::DarkCyan,
+    CRGB::OliveDrab,
+
+    CRGB::MediumSeaGreen,
+    CRGB::Aqua, 
+    CRGB::SeaGreen,
+    CRGB::DarkSeaGreen,
+         
+    CRGB::LimeGreen,
+    CRGB::DarkTurquoise,
+    CRGB::Aqua,
+    CRGB::Blue,
 
     CRGB::DarkBlue,
     CRGB::MediumBlue,
@@ -115,28 +156,8 @@ const TProgmemRGBPalette32 Ocean_p PROGMEM =
     CRGB::DarkCyan,
     CRGB::CornflowerBlue,
 
-    CRGB::Aquamarine,
-    CRGB::SeaGreen,
-    CRGB::Aqua,
-    CRGB::LightSkyBlue
-     
-    CRGB::MidnightBlue,
-    CRGB::DarkBlue,
-    CRGB::Green,
-    CRGB::Navy,
-
-    CRGB::DarkBlue,
-    CRGB::MediumBlue,
-    CRGB::SeaGreen,
-    CRGB::Teal,
-
-    CRGB::CadetBlue,
-    CRGB::Blue,
-    CRGB::DarkCyan,
-    CRGB::CornflowerBlue,
-
-    CRGB::Aquamarine,
-    CRGB::SeaGreen,
-    CRGB::Aqua,
-    CRGB::LightSkyBlue
+    CRGB::DarkSlateBlue,
+    CRGB::MediumPurple,
+    CRGB::Indigo,
+    CRGB::Purple,
 };
